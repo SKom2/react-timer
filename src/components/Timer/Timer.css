@@ -44,6 +44,9 @@
 .timer .timer__buttons .timer__button.cancel-button {
   background-color: red;
 }
+.timer .timer__buttons .timer__button.reset-button {
+  background-color: orange;
+}
 
 @media screen and (max-width: 600px) {
   .timer .timer__container {

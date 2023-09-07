@@ -7,7 +7,8 @@ export default function Timer() {
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
-    const [intervalId, setIntervalId] = useState(null)
+    const [intervalId, setIntervalId] = useState(null);
+    const [isStopButton, setIsStopButton] = useState(true)
 
     function startTimer() {
         if (isRunning) return;
@@ -44,10 +45,17 @@ export default function Timer() {
     }
 
     function stopTimer(){
-        clearInterval(intervalId)
-
         if (!isRunning) return;
+        clearInterval(intervalId)
+        setIsStopButton(false)
         setIsRunning(false)
+    }
+
+    function resetTimer(){
+        setIsStopButton(true)
+        setHours(0)
+        setMinutes(0);
+        setSeconds(0);
     }
 
     return (
@@ -59,7 +67,11 @@ export default function Timer() {
                 <p className="timer__values seconds">{seconds} sec</p>
             </div>
             <div className="timer__buttons">
-                <button className="timer__button cancel-button" onClick={stopTimer}>Stop</button>
+                {isStopButton ?
+                    <button className="timer__button cancel-button" onClick={stopTimer}>Stop</button>
+                    :
+                    <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
+                }
                 <button className="timer__button start-button" onClick={startTimer}>Start</button>
             </div>
         </section>
