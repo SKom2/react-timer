@@ -13,7 +13,7 @@ export default function Timer() {
     const [isFormAvailable, setIsFormAvailable] = useState(false)
     const [isTimingsState, setIsTimingsState] = useState(false)
 
-    const {values, handleChange, errors, isValid, setIsValid} = useForm({
+    const {values, handleChange, errors, isValid, setIsValid, resetForm} = useForm({
         hours: '',
         minutes: '',
         seconds: ''
@@ -58,6 +58,7 @@ export default function Timer() {
     function stopTimer(){
         if (!isRunning) return;
         clearInterval(intervalId)
+        setIsStopButton(true)
         setIsRunning(false)
     }
 
@@ -67,6 +68,7 @@ export default function Timer() {
         setMinutes(0);
         setSeconds(0);
         setTime(0)
+        clearInterval(intervalId)
         displayTime(0)
     }
 
@@ -113,7 +115,10 @@ export default function Timer() {
                     ></input>
                 </form>
             ) : (
-                <div className="timer__container" onClick={() => setIsFormAvailable(true)}>
+                <div className="timer__container" onClick={() => {
+                    resetForm()
+                    setIsFormAvailable(true)
+                }}>
                     <p className="timer__values hours">{hours} hours</p>
                     <p className="timer__values minutes">{minutes} min</p>
                     <p className="timer__values seconds">{seconds} sec</p>
