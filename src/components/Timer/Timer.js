@@ -1,5 +1,6 @@
 import './Timer.scss';
 import { useEffect, useState } from "react";
+import {useForm} from "../../hooks/useForm";
 
 export default function Timer() {
     const [time, setTime] = useState(0);
@@ -9,31 +10,14 @@ export default function Timer() {
     const [isRunning, setIsRunning] = useState(false);
     const [intervalId, setIntervalId] = useState(null);
     const [isStopButton, setIsStopButton] = useState(true)
+    const [isFormAvailable, setIsFormAvailable] = useState(false)
     const [isTimingsState, setIsTimingsState] = useState(false)
 
-    function goOnTimingTable(){
-        if (isRunning) return;
-        setIsTimingsState(true);
-    }
-
-    function chooseTiming(e){
-        console.log(e.target.textContent.replace(/\d+/g, "").trim())
-        const unitsOfTime = e.target.textContent.replace(/\d+/g, "").trim();
-        const time = parseInt(e.target.textContent)
-        if (unitsOfTime === 'sec'){
-            setSeconds(time);
-            setTime(time)
-        }
-        if (unitsOfTime === 'min'){
-            setMinutes(time)
-            setTime(time * 60)
-        }
-        if (unitsOfTime === 'hour'){
-            setHours(time)
-            setTime(time * 3600)
-        }
-        setIsTimingsState(false)
-    }
+    const {values, handleChange, errors, isValid, setIsValid} = useForm({
+        hours: '',
+        minutes: '',
+        seconds: ''
+    });
 
     function startTimer() {
         if (isRunning) return;
@@ -73,8 +57,8 @@ export default function Timer() {
     function stopTimer(){
         if (!isRunning) return;
         clearInterval(intervalId)
-        setIsStopButton(false)
         setIsRunning(false)
+        setIsStopButton(false)
     }
 
     function resetTimer(){
@@ -83,38 +67,74 @@ export default function Timer() {
         setMinutes(0);
         setSeconds(0);
         setTime(0)
+        displayTime(0)
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        const hours = parseInt(values.hours) || 0;
+        const minutes = parseInt(values.minutes) || 0;
+        const seconds = parseInt(values.seconds) || 0;
+        const totalTime = hours * 3600 + minutes * 60 + seconds;
+        setTime(totalTime);
+        setIsFormAvailable(false);
+        setIsStopButton(true)
+        displayTime(totalTime)
     }
 
     return (
-        <section className='timer'>
+        <section className='timer' onSubmit={handleSubmit}>
             <h1 className='timer__title'>Simple Timer</h1>
-            <div className="timer__container">
-                <p className="timer__values hours">{hours} hours</p>
-                <p className="timer__values minutes">{minutes} min</p>
-                <p className="timer__values seconds">{seconds} sec</p>
-            </div>
+            {isFormAvailable ? (
+                <form className="timer__container">
+                    <input
+                        type='number'
+                        className="timer__values hours"
+                        placeholder='00 hours'
+                        name='hours'
+                        value={values.hours || ''}
+                        onChange={handleChange}
+                    ></input>
+                    <input
+                        type='number'
+                        className="timer__values minutes"
+                        placeholder='00 minutes'
+                        name='minutes'
+                        value={values.minutes || ''}
+                        onChange={handleChange}
+                    ></input>
+                    <input
+                        type='number'
+                        className="timer__values seconds"
+                        placeholder='00 secs'
+                        name='seconds'
+                        value={values.seconds || ''}
+                        onChange={handleChange}
+                    ></input>
+                    <button type="submit" className="timer__button start-button">Submit</button>
+                </form>
+            ) : (
+                <div className="timer__container" onClick={() => setIsFormAvailable(true)}>
+                    <p className="timer__values hours">{hours} hours</p>
+                    <p className="timer__values minutes">{minutes} min</p>
+                    <p className="timer__values seconds">{seconds} sec</p>
+                </div>
+            )}
             <div className="timer__buttons">
-                {!isTimingsState ? (
-                        <>
-                            {isStopButton ?
-                                <button className="timer__button cancel-button" onClick={stopTimer}>Stop</button>
-                                :
-                                <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
-                            }
-                                <button className="timer__button time-button" onClick={goOnTimingTable}>Choose time</button>
-                                <button className="timer__button start-button" onClick={startTimer}>Start</button>
-                        </>
-                    ) : (
-                        <>
-                            <button className="timer__button timing-button" onClick={chooseTiming}>15 sec</button>
-                            <button className="timer__button timing-button" onClick={chooseTiming}>1 min</button>
-                            <button className="timer__button timing-button" onClick={chooseTiming}>5 min</button>
-                            <button className="timer__button timing-button" onClick={chooseTiming}>15 min</button>
-                            <button className="timer__button timing-button" onClick={chooseTiming}>30 min</button>
-                            <button className="timer__button timing-button" onClick={chooseTiming}>1 hour</button>
-                        </>
-                    )
-                }
+                {isFormAvailable ? (
+                    <>
+                        <button className="timer__button cancel-button" onClick={() => setIsFormAvailable(false)}>Cancel</button>
+                    </>
+                ) : (
+                    <>
+                        {isStopButton ?
+                            <button className="timer__button stop-button" onClick={stopTimer}>Stop</button>
+                            :
+                            <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
+                        }
+                        <button className="timer__button start-button" onClick={startTimer}>Start</button>
+                    </>
+                )}
 
             </div>
         </section>

@@ -3,6 +3,11 @@
   padding: 0;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 .timer {
   margin: 200px auto 0;
 }
@@ -21,8 +26,16 @@
   justify-content: center;
   align-items: center;
 }
+.timer .timer__container:hover {
+  outline: 3px solid white;
+  cursor: pointer;
+}
 .timer .timer__values {
   font-weight: 400;
+  background-color: transparent;
+  width: 20%;
+  text-align: center;
+  border: none;
 }
 .timer .timer__buttons {
   display: grid;
@@ -42,7 +55,7 @@
 .timer .timer__buttons .timer__button.start-button {
   background-color: #398cdf;
 }
-.timer .timer__buttons .timer__button.cancel-button {
+.timer .timer__buttons .timer__button.stop-button, .timer .timer__buttons .timer__button.cancel-button {
   background-color: red;
 }
 .timer .timer__buttons .timer__button.reset-button {

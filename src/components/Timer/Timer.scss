@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
 
 .timer{
   margin: 200px auto 0;
@@ -23,11 +27,21 @@
     gap: 70px;
     justify-content: center;
     align-items: center;
+
+    &:hover{
+      outline: 3px solid white;
+      cursor: pointer;
+    }
   }
 
   .timer__values{
     @extend %default-values;
     font-weight: 400;
+    background-color: transparent;
+    width: 20%;
+    text-align: center;
+    border: none;
+
   }
 
   .timer__buttons{
@@ -49,7 +63,7 @@
         background-color: #398cdf;
       }
 
-      &.cancel-button{
+      &.stop-button, &.cancel-button{
         background-color: red;
       }
 
