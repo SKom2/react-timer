@@ -54,22 +54,28 @@ input::-webkit-inner-spin-button {
   border: none;
 }
 .timer .timer__buttons .timer__button.submit-button {
-  background-color: #4caf50; /* Зеленый цвет */
+  background-color: #4caf50;
 }
 .timer .timer__buttons .timer__button.submit-button:hover {
-  background-color: #45a049; /* Зеленый цвет при наведении */
+  background-color: #45a049;
 }
 .timer .timer__buttons .timer__button.start-button {
   background-color: #398cdf;
 }
+.timer .timer__buttons .timer__button.start-button:hover {
+  background-color: #3581ce;
+}
 .timer .timer__buttons .timer__button.stop-button, .timer .timer__buttons .timer__button.cancel-button {
   background-color: red;
+}
+.timer .timer__buttons .timer__button.stop-button:hover, .timer .timer__buttons .timer__button.cancel-button:hover {
+  background-color: #ed0000;
 }
 .timer .timer__buttons .timer__button.reset-button {
   background-color: orange;
 }
-.timer .timer__buttons .timer__button.time-button {
-  background-color: #22b722;
+.timer .timer__buttons .timer__button.reset-button:hover {
+  background-color: #ed9901; /* Зеленый цвет при наведении */
 }
 .timer .timer__buttons .timer__button.timing-button {
   color: #202020;

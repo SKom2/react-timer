@@ -4,14 +4,15 @@ import {useForm} from "../../hooks/useForm";
 
 export default function Timer() {
     const [time, setTime] = useState(0);
+    const [initialTime, setInitialTime] = useState(0)
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
+    const [isInProcess, setIsInProcess] = useState(false)
     const [intervalId, setIntervalId] = useState(null);
     const [isStopButton, setIsStopButton] = useState(false)
     const [isFormAvailable, setIsFormAvailable] = useState(false)
-    const [isTimerWithValue, setIsTimerWithValue] = useState(false);
     const [remainingTime, setRemainingTime] = useState(0)
     const [endTime, setEndTIme] = useState(0)
 
@@ -27,6 +28,7 @@ export default function Timer() {
 
         setIsStopButton(true)
         setIsRunning(true);
+        setIsInProcess(true)
 
         const endTime = time + Math.floor(Date.now() / 1000);
         setEndTIme(endTime)
@@ -39,7 +41,6 @@ export default function Timer() {
             if (remainingTime <= 0) {
                 clearInterval(id);
                 setIsRunning(false);
-                setIsTimerWithValue(false)
                 setIsStopButton(false)
                 displayTime(0)
                 return;
@@ -73,14 +74,15 @@ export default function Timer() {
 
     function resetTimer(){
         setIsStopButton(false);
-        setIsTimerWithValue(false)
-        setIsRunning(false)
+        setIsRunning(false);
+        setIsInProcess(false)
         setHours(0)
         setMinutes(0);
         setSeconds(0);
-        setTime(0)
+        console.log(initialTime)
+        setTime(initialTime)
         clearInterval(intervalId)
-        displayTime(0)
+        displayTime(initialTime)
     }
 
     function handleSubmit(event) {
@@ -90,9 +92,9 @@ export default function Timer() {
         const seconds = parseInt(values.seconds) || 0;
         const totalTime = hours * 3600 + minutes * 60 + seconds;
         setTime(totalTime);
+        setInitialTime(totalTime)
         setIsFormAvailable(false);
         setIsStopButton(false)
-        setIsTimerWithValue(true)
         displayTime(totalTime)
     }
 
@@ -147,9 +149,12 @@ export default function Timer() {
                     <>
                         <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
                         {!isStopButton ?
-                            <button className="timer__button start-button" onClick={startTimer}>Start</button>
+                            !isInProcess ?
+                                <button className="timer__button start-button" onClick={startTimer}>Start</button>
+                                :
+                                <button className="timer__button start-button" onClick={startTimer}>Continue</button>
                             :
-                            <button className="timer__button stop-button" onClick={stopTimer}>Stop</button>
+                            (<button className="timer__button stop-button" onClick={stopTimer}>Stop</button>)
                         }
                     </>
                 )}

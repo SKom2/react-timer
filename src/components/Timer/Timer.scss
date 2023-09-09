@@ -60,26 +60,31 @@ input::-webkit-inner-spin-button {
       border: none;
 
       &.submit-button{
-        background-color: #4caf50; /* Зеленый цвет */
+        background-color: #4caf50;
         &:hover {
-          background-color: #45a049; /* Зеленый цвет при наведении */
+          background-color: #45a049;
         }
       }
 
       &.start-button{
         background-color: #398cdf;
+        &:hover {
+          background-color: #3581ce;
+        }
       }
 
       &.stop-button, &.cancel-button{
         background-color: red;
+        &:hover {
+          background-color: #ed0000; 
+        }
       }
 
       &.reset-button{
         background-color: orange;
-      }
-
-      &.time-button{
-        background-color: #22b722;
+        &:hover {
+          background-color: #ed9901; /* Зеленый цвет при наведении */
+        }
       }
 
       &.timing-button{
