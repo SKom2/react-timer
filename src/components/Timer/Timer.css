@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .timer .timer__values, .timer .timer__title {
   margin: 0;
   padding: 0;
@@ -51,6 +52,12 @@ input::-webkit-inner-spin-button {
   font-size: 15px;
   color: white;
   border: none;
+}
+.timer .timer__buttons .timer__button.submit-button {
+  background-color: #4caf50; /* Зеленый цвет */
+}
+.timer .timer__buttons .timer__button.submit-button:hover {
+  background-color: #45a049; /* Зеленый цвет при наведении */
 }
 .timer .timer__buttons .timer__button.start-button {
   background-color: #398cdf;

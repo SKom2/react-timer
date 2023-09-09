@@ -59,6 +59,13 @@ input::-webkit-inner-spin-button {
       color: white;
       border: none;
 
+      &.submit-button{
+        background-color: #4caf50; /* Зеленый цвет */
+        &:hover {
+          background-color: #45a049; /* Зеленый цвет при наведении */
+        }
+      }
+
       &.start-button{
         background-color: #398cdf;
       }

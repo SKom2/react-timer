@@ -21,6 +21,7 @@ export default function Timer() {
 
     function startTimer() {
         if (isRunning) return;
+        setIsStopButton(false)
         if (time === 0) return;
         setIsRunning(true);
 
@@ -58,7 +59,6 @@ export default function Timer() {
         if (!isRunning) return;
         clearInterval(intervalId)
         setIsRunning(false)
-        setIsStopButton(false)
     }
 
     function resetTimer(){
@@ -83,7 +83,7 @@ export default function Timer() {
     }
 
     return (
-        <section className='timer' onSubmit={handleSubmit}>
+        <section className='timer'>
             <h1 className='timer__title'>Simple Timer</h1>
             {isFormAvailable ? (
                 <form className="timer__container">
@@ -111,7 +111,6 @@ export default function Timer() {
                         value={values.seconds || ''}
                         onChange={handleChange}
                     ></input>
-                    <button type="submit" className="timer__button start-button">Submit</button>
                 </form>
             ) : (
                 <div className="timer__container" onClick={() => setIsFormAvailable(true)}>
@@ -124,15 +123,16 @@ export default function Timer() {
                 {isFormAvailable ? (
                     <>
                         <button className="timer__button cancel-button" onClick={() => setIsFormAvailable(false)}>Cancel</button>
+                        <button type="submit" className="timer__button submit-button" onClick={handleSubmit}>Submit</button>
                     </>
                 ) : (
                     <>
+                        <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
                         {isStopButton ?
-                            <button className="timer__button stop-button" onClick={stopTimer}>Stop</button>
+                            <button className="timer__button start-button" onClick={startTimer}>Start</button>
                             :
-                            <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
+                            <button className="timer__button stop-button" onClick={stopTimer}>Stop</button>
                         }
-                        <button className="timer__button start-button" onClick={startTimer}>Start</button>
                     </>
                 )}
 
