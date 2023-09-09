@@ -9,9 +9,11 @@ export default function Timer() {
     const [seconds, setSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [intervalId, setIntervalId] = useState(null);
-    const [isStopButton, setIsStopButton] = useState(true)
+    const [isStopButton, setIsStopButton] = useState(false)
     const [isFormAvailable, setIsFormAvailable] = useState(false)
-    const [isTimingsState, setIsTimingsState] = useState(false)
+    const [isTimerWithValue, setIsTimerWithValue] = useState(false);
+    const [remainingTime, setRemainingTime] = useState(0)
+    const [endTime, setEndTIme] = useState(0)
 
     const {values, handleChange, errors, isValid, setIsValid, resetForm} = useForm({
         hours: '',
@@ -21,11 +23,13 @@ export default function Timer() {
 
     function startTimer() {
         if (isRunning) return;
-        setIsStopButton(false)
         if (time === 0) return;
+
+        setIsStopButton(true)
         setIsRunning(true);
 
         const endTime = time + Math.floor(Date.now() / 1000);
+        setEndTIme(endTime)
 
         displayTime(time)
 
@@ -35,6 +39,8 @@ export default function Timer() {
             if (remainingTime <= 0) {
                 clearInterval(id);
                 setIsRunning(false);
+                setIsTimerWithValue(false)
+                setIsStopButton(false)
                 displayTime(0)
                 return;
             }
@@ -58,12 +64,17 @@ export default function Timer() {
     function stopTimer(){
         if (!isRunning) return;
         clearInterval(intervalId)
-        setIsStopButton(true)
+        setIsStopButton(false)
         setIsRunning(false)
+        const remainingTime = endTime - Math.floor(Date.now() / 1000);
+        setRemainingTime(remainingTime)
+        setTime(remainingTime)
     }
 
     function resetTimer(){
-        setIsStopButton(true)
+        setIsStopButton(false);
+        setIsTimerWithValue(false)
+        setIsRunning(false)
         setHours(0)
         setMinutes(0);
         setSeconds(0);
@@ -80,7 +91,8 @@ export default function Timer() {
         const totalTime = hours * 3600 + minutes * 60 + seconds;
         setTime(totalTime);
         setIsFormAvailable(false);
-        setIsStopButton(true)
+        setIsStopButton(false)
+        setIsTimerWithValue(true)
         displayTime(totalTime)
     }
 
@@ -116,6 +128,7 @@ export default function Timer() {
                 </form>
             ) : (
                 <div className="timer__container" onClick={() => {
+                    if (isRunning) return;
                     resetForm()
                     setIsFormAvailable(true)
                 }}>
@@ -133,7 +146,7 @@ export default function Timer() {
                 ) : (
                     <>
                         <button className="timer__button reset-button" onClick={resetTimer}>Reset</button>
-                        {isStopButton ?
+                        {!isStopButton ?
                             <button className="timer__button start-button" onClick={startTimer}>Start</button>
                             :
                             <button className="timer__button stop-button" onClick={stopTimer}>Stop</button>
