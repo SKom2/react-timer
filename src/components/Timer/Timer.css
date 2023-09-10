@@ -1,5 +1,4 @@
-@charset "UTF-8";
-.timer .timer__values, .timer .timer__title {
+.timer .timer__values-label .timer__values, .timer .timer__title {
   margin: 0;
   padding: 0;
 }
@@ -31,12 +30,23 @@ input::-webkit-inner-spin-button {
   outline: 3px solid white;
   cursor: pointer;
 }
-.timer .timer__values {
+.timer .timer__values-label {
+  display: flex;
+  width: 130px;
+  gap: 5px;
+  align-items: center;
+}
+.timer .timer__values-label .timer__values {
   font-weight: 400;
   background-color: transparent;
   width: 20%;
   text-align: center;
-  border: none;
+  border: 3px solid #e3c200;
+  padding: 6px 20px;
+  border-radius: 10px;
+}
+.timer .timer__values-label .timer__values:focus {
+  outline: none;
 }
 .timer .timer__buttons {
   display: grid;
@@ -59,11 +69,17 @@ input::-webkit-inner-spin-button {
 .timer .timer__buttons .timer__button.submit-button:hover {
   background-color: #45a049;
 }
+.timer .timer__buttons .timer__button.submit-button:disabled {
+  background-color: #9d9c9c;
+}
 .timer .timer__buttons .timer__button.start-button {
   background-color: #398cdf;
 }
 .timer .timer__buttons .timer__button.start-button:hover {
   background-color: #3581ce;
+}
+.timer .timer__buttons .timer__button.start-button:disabled {
+  background-color: #9d9c9c;
 }
 .timer .timer__buttons .timer__button.stop-button, .timer .timer__buttons .timer__button.cancel-button {
   background-color: red;
@@ -75,16 +91,16 @@ input::-webkit-inner-spin-button {
   background-color: orange;
 }
 .timer .timer__buttons .timer__button.reset-button:hover {
-  background-color: #ed9901; /* Зеленый цвет при наведении */
+  background-color: #ed9901;
 }
 .timer .timer__buttons .timer__button.timing-button {
   color: #202020;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 700px) {
   .timer .timer__container {
-    gap: 20px;
-    height: 70px;
+    gap: 10px;
+    height: 80px;
   }
   .timer .timer__values {
     font-size: 20px;
