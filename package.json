@@ -1,8 +1,8 @@
 {
-  "homepage": "https://github.com/SKom2/react-timer",
+  "homepage": "https://skom2.github.io/react-timer/public",
   "name": "react-timer",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
