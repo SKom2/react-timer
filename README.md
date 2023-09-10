@@ -18,3 +18,6 @@
 1. Установите зависимости с помощью `npm install` или `yarn install`.
 2. Запустите приложение с помощью `npm start` или `yarn start`.
 3. Откройте браузер и перейдите по адресу `http://localhost:3000`.
+
+
+## Ссылка на деплой проекта - https://skom2.github.io/react-timer/
