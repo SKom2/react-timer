@@ -1,4 +1,4 @@
-import {createContext, FC, ReactNode, useContext, useRef, useState} from "react";
+import {createContext, FC, ReactNode, useContext, useState} from "react";
 
 const DELAY = 1000;
 
@@ -12,7 +12,13 @@ interface TimerContextProviderProps extends TimerProps {
     children: ReactNode;
 }
 
-interface TimerContextProps extends TimerProps {
+interface TimerContextProps {
+    title: string;
+    endTime: number;
+    elapsedTime: number;
+    delay: number;
+    isAnimationStarted: boolean;
+    isAnimationPaused: boolean;
     onStart: () => void;
     onPause: () => void;
     onReset: () => void;
@@ -22,47 +28,50 @@ const TimerContext = createContext<TimerContextProps>({
     title: '',
     endTime: 0,
     elapsedTime: 0,
+    delay: DELAY,
+    isAnimationStarted: false,
+    isAnimationPaused: false,
     onStart: () => {},
     onPause: () => {},
     onReset: () => {},
-})
+});
 
 export const TimerContextProvider: FC<TimerContextProviderProps> = ({ title, endTime, elapsedTime = 0, children }) => {
-    const [endTimeState, setEndTimeState] = useState(endTime * DELAY)
-    const [elapsedTimeState, setElapsedTimeState] = useState(elapsedTime  * DELAY)
-
-    const intervalId = useRef<ReturnType<typeof setInterval>>();
+    const [isAnimationStarted, setIsAnimationStarted] = useState(false)
+    const [isAnimationPaused, setIsAnimationPaused] = useState(true)
 
     const onStart = () => {
-        intervalId.current = setInterval(() => {
-            setEndTimeState((endTime) => endTime - DELAY)
-            setElapsedTimeState((elapsedTime) => elapsedTime + DELAY)
-        }, DELAY)
+        setIsAnimationStarted(true)
+        setIsAnimationPaused(false)
     }
 
-    const onPause = () => clearInterval(intervalId.current)
+    const onPause = () => {
+        setIsAnimationPaused(true)
+    }
 
     const onReset = () => {
-        setElapsedTimeState(elapsedTime * DELAY)
-        setEndTimeState(endTime * DELAY)
-        clearInterval(intervalId.current)
+        setIsAnimationStarted(false)
+        setIsAnimationPaused(true)
     }
 
-    const context = {
+    const contextValue = {
         title,
-        endTime: endTimeState / DELAY,
-        elapsedTime: elapsedTimeState / DELAY,
+        endTime,
+        elapsedTime,
+        delay: DELAY,
+        isAnimationStarted,
+        isAnimationPaused,
         onStart,
         onPause,
-        onReset
+        onReset,
     }
 
     return (
-        <TimerContext.Provider value={context}>
+        <TimerContext.Provider value={contextValue}>
             {children}
         </TimerContext.Provider>
-    )
-}
+    );
+};
 
 export const useTimer = () => {
     const context = useContext(TimerContext);
@@ -72,4 +81,4 @@ export const useTimer = () => {
     }
 
     return context;
-}
+};
