@@ -6,9 +6,11 @@ import TimerDisplay from "./TimerDisplay.tsx";
 const Timer: FC<TimerProps> = ({ title, endTime, elapsedTime }) => {
     return (
         <TimerContextProvider title={title} endTime={endTime} elapsedTime={elapsedTime}>
-            <div className="w-80 p-10 rounded text-center bg-timer-bg ">
-                <TimerDisplay />
-                <TimerControls />
+            <div className="p-8 rounded-[25px] text-center bg-timer-bg">
+                <div className="flex flex-col justify-center items-center gap-8">
+                    <TimerDisplay />
+                    <TimerControls />
+                </div>
             </div>
         </TimerContextProvider>
     );

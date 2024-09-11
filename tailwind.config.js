@@ -13,11 +13,11 @@ export default {
         'timer-bg': 'var(--color-timer-bg)',
         'timer-text': 'var(--color-timer-text)',
         'timer-content': 'var(--color-timer-content)',
+        'timer-content-secondary': 'var(--color-timer-content-secondary)',
 
         'circle-bg': 'var(--color-circle-bg)',
         'circle-bg-active': 'var(--color-circle-bg-active)',
         'circle-bg-completed': 'var(--color-circle-bg-completed)',
-
 
         'button-outline': 'var(--color-button-outline)',
       },

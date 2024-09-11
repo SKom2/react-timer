@@ -1,9 +1,12 @@
 import {useTimer} from "../context/TimerContext.tsx";
 import {useEffect, useRef, useState} from "react";
+import TimerTitle from "./TimerTitle.tsx";
+import TimerElapsedTimeClock from "./TimerElapsedTimeClock.tsx";
+import TimerEndTimeClock from "./TimerEndTimeClock.tsx";
 
 
 const TimerDisplay = () => {
-    const { elapsedTime, endTime, delay, title, isAnimationStarted, isAnimationPaused } = useTimer()
+    const { elapsedTime, endTime, delay, isAnimationStarted, isAnimationPaused } = useTimer()
 
     const [endTimeState, setEndTimeState] = useState(endTime * delay);
     const [elapsedTimeState, setElapsedTimeState] = useState(elapsedTime * delay);
@@ -16,7 +19,7 @@ const TimerDisplay = () => {
                 setEndTimeState((endTime) => endTime - delay);
                 setElapsedTimeState((elapsedTime) => elapsedTime + delay);
             }, delay);
-        } else  {
+        } else {
             clearInterval(intervalId.current)
             if (!isAnimationStarted) {
                 setElapsedTimeState(elapsedTime * delay);
@@ -28,10 +31,10 @@ const TimerDisplay = () => {
     }, [isAnimationStarted, isAnimationPaused]);
 
     return (
-        <div>
-            <h1 className="timer-title">{title}</h1>
-            <p>{endTimeState / delay}</p>
-            <p>{elapsedTimeState / delay}</p>
+        <div className="border-[6px] h-[170px] w-[170px] flex flex-col gap-2 justify-center rounded-circle border-circle-bg">
+            <TimerTitle />
+            <TimerElapsedTimeClock elapsedTime={elapsedTimeState / delay} />
+            <TimerEndTimeClock endTime={endTimeState / delay} />
         </div>
     );
 };

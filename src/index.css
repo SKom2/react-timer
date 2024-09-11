@@ -9,6 +9,7 @@
 
     --color-white: #fff;
 
+    --color-light-gray: #c5c5cd;
     --color-gray: #606170;
 
     --color-light-purple: #a2a4cb;
@@ -21,46 +22,46 @@
     --color-timer-bg: var(--color-dark-purple);
     --color-timer-text: var(--color-white);
     --color-timer-content: var(--color-light-purple);
+    --color-timer-content-secondary: var(--color-light-gray);
 
     --color-circle-bg: var(--color-purple);
     --color-circle-bg-active: var(--color-light-green);
     --color-circle-bg-completed: var(--color-light-red);
 
+    --color-button-outline: var(--color-gray);
 
-    --color-button-outline: var(--color-light-green);
-
-    --font-size-title: 1.5rem;
-    --font-size-timer: 3rem;
-    --font-size-time-left: 1rem;
-    --font-size-button: 0.875rem;
+    --font-size-title: 0.7rem;
+    --font-size-timer: 2rem;
+    --font-size-time-left: 0.7rem;
+    --font-size-button: 0.8rem;
 
     --line-height-title: 1.5;
     --line-height-timer: 1.2;
-    --line-height-time-left: 1.4;
+    --line-height-time-left: 1;
     --line-height-button: 1.6;
 
-    --border-radius-button: 12px;
+    --border-radius-button: 1.25rem;
     --border-radius-circle: 50%;
 }
 
 @layer components {
     .timer-title {
-        @apply text-title font-bold leading-title text-timer-content;
+        @apply text-title font-normal leading-title text-timer-content;
     }
     .timer-display {
-        @apply text-timer font-extrabold leading-tight text-timer-text;
+        @apply text-timer font-normal leading-tight text-timer-text;
     }
     .timer-subtitle {
-        @apply text-time-left font-medium leading-time-left text-content;
+        @apply text-time-left font-normal leading-time-left text-timer-content;
     }
     .timer-button-text {
-        @apply text-button font-semibold leading-button text-content;
+        @apply text-button font-normal leading-button text-timer-content-secondary;
     }
     .timer-button-active {
-        @apply text-button font-semibold leading-button text-circle-bg-active;
+        @apply text-button font-normal leading-button text-circle-bg-active;
     }
     .timer-button-reset {
-        @apply text-button font-semibold leading-button text-circle-bg-completed;
+        @apply text-button font-normal leading-button text-circle-bg-completed;
     }
     .timer-caption {
         @apply text-sm font-light leading-tight text-content uppercase tracking-wider;
