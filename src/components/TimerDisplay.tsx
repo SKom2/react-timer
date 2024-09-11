@@ -29,7 +29,7 @@ const TimerDisplay = () => {
 
     return (
         <div>
-            <h1>{title}</h1>
+            <h1 className="timer-title">{title}</h1>
             <p>{endTimeState / delay}</p>
             <p>{elapsedTimeState / delay}</p>
         </div>

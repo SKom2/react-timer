@@ -1,3 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --font-open-sans: 'Open Sans', sans-serif;
+
+    --color-white: #fff;
+
+    --color-gray: #606170;
+
+    --color-light-purple: #a2a4cb;
+    --color-purple: #545576;
+    --color-dark-purple: #26273d;
+
+    --color-light-green: #67cb88;
+    --color-light-red: #cb6767;
+
+    --color-timer-bg: var(--color-dark-purple);
+    --color-timer-text: var(--color-white);
+    --color-timer-content: var(--color-light-purple);
+
+    --color-circle-bg: var(--color-purple);
+    --color-circle-bg-active: var(--color-light-green);
+    --color-circle-bg-completed: var(--color-light-red);
+
+
+    --color-button-outline: var(--color-light-green);
+
+    --font-size-title: 1.5rem;
+    --font-size-timer: 3rem;
+    --font-size-time-left: 1rem;
+    --font-size-button: 0.875rem;
+
+    --line-height-title: 1.5;
+    --line-height-timer: 1.2;
+    --line-height-time-left: 1.4;
+    --line-height-button: 1.6;
+
+    --border-radius-button: 12px;
+    --border-radius-circle: 50%;
+}
+
+@layer components {
+    .timer-title {
+        @apply text-title font-bold leading-title text-timer-content;
+    }
+    .timer-display {
+        @apply text-timer font-extrabold leading-tight text-timer-text;
+    }
+    .timer-subtitle {
+        @apply text-time-left font-medium leading-time-left text-content;
+    }
+    .timer-button-text {
+        @apply text-button font-semibold leading-button text-content;
+    }
+    .timer-button-active {
+        @apply text-button font-semibold leading-button text-circle-bg-active;
+    }
+    .timer-button-reset {
+        @apply text-button font-semibold leading-button text-circle-bg-completed;
+    }
+    .timer-caption {
+        @apply text-sm font-light leading-tight text-content uppercase tracking-wider;
+    }
+}
