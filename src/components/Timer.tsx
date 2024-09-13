@@ -1,7 +1,8 @@
 import {FC} from 'react';
-import {TimerContextProvider, TimerProps} from "../context/TimerContext.tsx";
+import {TimerContextProvider} from "../context/TimerContext.tsx";
 import TimerControls from "./TimerControls.tsx";
 import TimerDisplay from "./TimerDisplay.tsx";
+import {TimerProps} from "../types/TimerTypes.ts";
 
 const Timer: FC<TimerProps> = ({ title, endTime, elapsedTime }) => {
     return (

@@ -1,10 +1,12 @@
-import {FC} from "react";
 import {formatTime} from "../utils/formatTime.ts";
+import {useTimer} from "../context/TimerContext.tsx";
 
-const TimerEndTimeClock: FC<{ endTime: number }> = ({ endTime }) => {
+const TimerEndTime = () => {
+    const { endTime } = useTimer();
+
     const formattedEndTime = formatTime(endTime)
 
     return <p className="timer-subtitle">{formattedEndTime} left</p>
 };
 
-export default TimerEndTimeClock;
+export default TimerEndTime;
