@@ -1,7 +1,7 @@
-import {useTimer} from "../context/TimerContext.tsx";
+import {useTimerContext} from "../context/TimerContext.tsx";
 
 const TimerTitle = () => {
-    const { title } = useTimer()
+    const { title } = useTimerContext()
 
     return <h1 className="timer-title">{title}</h1>
 

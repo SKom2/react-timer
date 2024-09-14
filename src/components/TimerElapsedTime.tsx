@@ -1,9 +1,7 @@
+import {FC} from "react";
 import {formatTime} from "../utils/formatTime.ts";
-import {useTimer} from "../context/TimerContext.tsx";
 
-const TimerElapsedTime = () => {
-    const { elapsedTime } = useTimer();
-
+const TimerElapsedTime: FC<{ elapsedTime: number }> = ({ elapsedTime }) => {
     const formattedElapsedTime = formatTime(elapsedTime)
 
     return <p className="timer-display">{formattedElapsedTime}</p>

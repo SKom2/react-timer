@@ -1,13 +1,20 @@
 import TimerTitle from "./TimerTitle.tsx";
 import TimerElapsedTime from "./TimerElapsedTime.tsx";
 import TimerEndTime from "./TimerEndTime.tsx";
+import {FC} from "react";
 
-const TimerClock = () => {
+const TimerClock: FC<{
+    endTime: number,
+    elapsedTime: number
+}> = ({
+    endTime,
+    elapsedTime,
+                        }) => {
     return (
         <div className="absolute">
-            <TimerTitle/>
-            <TimerElapsedTime/>
-            <TimerEndTime/>
+            <TimerTitle />
+            <TimerElapsedTime elapsedTime={elapsedTime} />
+            <TimerEndTime endTime={endTime} />
         </div>
     );
 };

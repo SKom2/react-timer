@@ -1,4 +1,4 @@
-import {ReactNode} from "react";
+import React, {ReactNode} from "react";
 
 export interface TimerProps {
     title: string;
@@ -14,7 +14,13 @@ export interface TimerContextProps {
     title: string;
     endTime: number;
     elapsedTime: number;
-    strokeDashoffset: number;
+
+    isTimerStarted: boolean,
+    setIsTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
+    isTimerFinished: boolean,
+    setIsTimerFinished: React.Dispatch<React.SetStateAction<boolean>>;
+    isTimerPaused: boolean,
+
     onStart: () => void;
     onPause: () => void;
     onReset: () => void;
