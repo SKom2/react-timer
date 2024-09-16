@@ -1,50 +1,51 @@
 import {createContext, FC, useContext, useEffect, useRef, useState} from "react";
 import {TimerContextProps, TimerContextProviderProps} from "../types/TimerTypes.ts";
 import {convertToMilliseconds} from "../utils/formatTime.ts";
-import {getFromLocalStorage, setToLocalStorage} from "../utils/storageHelpers.ts";
+import {defaultTimerState, getTimerStateFromLocalStorage, setToLocalStorage} from "../utils/storageHelpers.ts";
 
 const TimerContext = createContext<TimerContextProps>({
     title: '',
     endTime: 0,
-    cachedTimerState: null,
+    elapsedTime: 0,
+    duration: 0,
 
     isTimerStarted: false,
-    setIsTimerStarted: () => {},
-    isTimerFinished: false,
-    setIsTimerFinished: () => {},
     isTimerPaused: false,
+    isTimerFinished: false,
+    isTimerReset: false,
+    setIsTimerStarted: () => {},
+    setIsTimerFinished: () => {},
+
+    cachedTimerStateRef: null,
+    cachedTimerState: defaultTimerState,
 
     onStart: () => {},
     onPause: () => {},
     onReset: () => {},
 });
 
-export const TimerContextProvider: FC<TimerContextProviderProps> = ({ title, endTime, elapsedTime = 0, children }) => {
+export const TimerContextProvider: FC<TimerContextProviderProps> = ({ title, endTime, elapsedTime, children }) => {
     const initialEndTime = convertToMilliseconds(endTime);
-    const initialElapsedTime = convertToMilliseconds(elapsedTime);
+    const initialElapsedTime = convertToMilliseconds(elapsedTime ? elapsedTime : 0);
+    const duration = initialElapsedTime + initialEndTime;
 
-    const cachedTimerState = useRef(getFromLocalStorage());
+    const cachedTimerStateRef = useRef(getTimerStateFromLocalStorage());
 
-    const [isTimerStarted, setIsTimerStarted] = useState(cachedTimerState.current.isTimerStarted);
-    const [isTimerPaused, setIsTimerPaused] = useState(cachedTimerState.current.isTimerPaused);
-    const [isTimerFinished, setIsTimerFinished] = useState(cachedTimerState.current.isTimerFinished);
-
-    useEffect(() => {
-        if (isTimerFinished) {
-            setIsTimerFinished(false);
-        }
-    }, []);
+    const [isTimerStarted, setIsTimerStarted] = useState(cachedTimerStateRef.current.isTimerStarted);
+    const [isTimerPaused, setIsTimerPaused] = useState(cachedTimerStateRef.current.isTimerPaused);
+    const [isTimerFinished, setIsTimerFinished] = useState(false);
+    const [isTimerReset, setIsTimerReset] = useState(false);
 
     useEffect(() => {
-        cachedTimerState.current = setToLocalStorage(cachedTimerState, "isTimerStarted", isTimerStarted);
-        cachedTimerState.current = setToLocalStorage(cachedTimerState, "isTimerPaused", isTimerPaused);
-        cachedTimerState.current = setToLocalStorage(cachedTimerState, "isTimerFinished", isTimerFinished);
-    }, [isTimerStarted, isTimerPaused, isTimerFinished]);
+        setToLocalStorage(cachedTimerStateRef, "isTimerStarted", isTimerStarted);
+        setToLocalStorage(cachedTimerStateRef, "isTimerPaused", isTimerPaused);
+    }, [isTimerStarted, isTimerPaused]);
 
     const onStart = () => {
-        setIsTimerFinished(false);
         setIsTimerStarted(true);
         setIsTimerPaused(false);
+        setIsTimerFinished(false);
+        setIsTimerReset(false)
     };
 
     const onPause = () => {
@@ -55,19 +56,24 @@ export const TimerContextProvider: FC<TimerContextProviderProps> = ({ title, end
         setIsTimerStarted(false);
         setIsTimerPaused(false);
         setIsTimerFinished(false);
+        setIsTimerReset(true)
     };
 
     const contextValue = {
         title,
         endTime: initialEndTime,
         elapsedTime: initialElapsedTime,
-        cachedTimerState,
+        duration,
+
+        cachedTimerStateRef: cachedTimerStateRef,
+        cachedTimerState: cachedTimerStateRef.current,
 
         isTimerStarted,
-        setIsTimerStarted,
-        isTimerFinished,
-        setIsTimerFinished,
         isTimerPaused,
+        isTimerFinished,
+        isTimerReset,
+        setIsTimerStarted,
+        setIsTimerFinished,
 
         onStart,
         onPause,

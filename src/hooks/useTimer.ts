@@ -8,86 +8,100 @@ export const useTimer = () => {
     const {
         elapsedTime,
         endTime,
+        duration,
+
         isTimerStarted,
         isTimerPaused,
-        setIsTimerStarted,
         isTimerFinished,
+        isTimerReset,
+        setIsTimerStarted,
         setIsTimerFinished,
+
+        cachedTimerStateRef,
         cachedTimerState,
     } = useTimerContext();
-    const [strokeDashoffset, setStrokeDashoffset] = useState(cachedTimerState?.current.strokeDashoffset ?? STROKE_DASHARRAY);
-    const [strokeColor, setStrokeColor] = useState(cachedTimerState?.current.strokeColor ?? CircleColors.ACTIVE);
 
-    const timerAnimationFrameRef = useRef<number | null>(cachedTimerState?.current.timerAnimationFrameRef ?? null);
-    const intervalRef = useRef<number | null>(cachedTimerState?.current.intervalRef ?? null);
+    const [strokeDashoffset, setStrokeDashoffset] = useState<number>(
+        isTimerStarted
+            ? cachedTimerState.strokeDashoffset
+            : STROKE_DASHARRAY * (1 - elapsedTime / duration)
+    );
+    const [strokeColor, setStrokeColor] = useState<string>(CircleColors.ACTIVE);
+
+    const timerAnimationFrameRef = useRef<number | null>(null);
+    const intervalRef = useRef<number | null>(null);
 
     const startTimerAnimationTime = useRef<number | null>(null);
     const finishTimerAnimationTime = useRef<number | null>(null);
 
-    const mutableElapsedTime = useRef(cachedTimerState?.current.elapsedTime ?? elapsedTime);
-    const mutableEndTime = useRef(cachedTimerState?.current.endTime ?? endTime);
-
-    useEffect(() => {
-        if (cachedTimerState) {
-            cachedTimerState.current = setToLocalStorage(cachedTimerState, "elapsedTime", mutableElapsedTime.current);
-            cachedTimerState.current = setToLocalStorage(cachedTimerState, "endTime", mutableEndTime.current);
-            cachedTimerState.current = setToLocalStorage(cachedTimerState, "strokeDashoffset", strokeDashoffset);
-            cachedTimerState.current = setToLocalStorage(cachedTimerState, "strokeColor", strokeColor);
-            cachedTimerState.current = setToLocalStorage(cachedTimerState, "timerAnimationFrameRef", timerAnimationFrameRef.current);
-            cachedTimerState.current = setToLocalStorage(cachedTimerState, "intervalRef", intervalRef.current);
-        }
-    }, [strokeDashoffset, strokeColor]);
+    const mutableElapsedTime = useRef<number>(isTimerStarted ? cachedTimerState.elapsedTime : elapsedTime);
+    const mutableEndTime = useRef<number>(isTimerStarted ? cachedTimerState.endTime : endTime);
 
     useEffect(() => {
         if (isTimerStarted && !isTimerPaused && !isTimerFinished) {
+            startTimerAnimation()
+        } else if (isTimerPaused) {
+            pauseTimerAnimation()
+        } else if (isTimerFinished) {
+            finishTimerAnimation()
+        } else if (isTimerReset) {
+            resetTimerAnimation()
+        }
+
+        return () => {
             if (timerAnimationFrameRef.current !== null) {
                 cancelAnimationFrame(timerAnimationFrameRef.current);
             }
-            timerAnimationFrameRef.current = requestAnimationFrame(timerAnimation);
-        } else if (isTimerPaused) {
-            pauseTimerAnimation();
-        } else if (isTimerFinished) {
             if (intervalRef.current !== null) {
                 clearInterval(intervalRef.current);
             }
-            finishTimerAnimation();
-        } else {
-            resetTimerAnimation()
         }
-    }, [isTimerPaused, isTimerStarted, isTimerFinished]);
+    }, [isTimerPaused, isTimerStarted, isTimerFinished, isTimerReset]);
 
     const timerAnimation = (currentTime: number) => {
         if (!startTimerAnimationTime.current || !finishTimerAnimationTime.current) {
-            startTimerAnimationTime.current = currentTime - (mutableElapsedTime.current ?? 0);
-            finishTimerAnimationTime.current = startTimerAnimationTime.current + endTime;
+            startTimerAnimationTime.current = currentTime - mutableElapsedTime.current;
+            finishTimerAnimationTime.current = startTimerAnimationTime.current + duration;
         }
 
         mutableElapsedTime.current = Math.ceil(currentTime - startTimerAnimationTime.current);
         mutableEndTime.current = Math.ceil((finishTimerAnimationTime.current - currentTime) / MILLISECOND) * MILLISECOND;
 
-        const progress = mutableElapsedTime.current / endTime;
+        const progress = mutableElapsedTime.current / duration;
         const newStrokeDashoffset = STROKE_DASHARRAY * (1 - progress);
 
         setStrokeDashoffset(newStrokeDashoffset);
 
-        if (mutableElapsedTime.current < endTime && isTimerStarted && !isTimerPaused) {
+        if (cachedTimerStateRef) {
+            setToLocalStorage(cachedTimerStateRef, "elapsedTime", mutableElapsedTime.current);
+            setToLocalStorage(cachedTimerStateRef, "endTime", mutableEndTime.current);
+            setToLocalStorage(cachedTimerStateRef, "strokeDashoffset", newStrokeDashoffset);
+        }
+
+        if (mutableElapsedTime.current < duration && isTimerStarted && !isTimerPaused) {
             timerAnimationFrameRef.current = requestAnimationFrame(timerAnimation);
         } else {
             setIsTimerStarted(false)
             setIsTimerFinished(true)
-            cancelAnimationFrame(timerAnimationFrameRef.current!);
         }
     };
+
+    const startTimerAnimation = () => {
+        timerAnimationFrameRef.current = requestAnimationFrame(timerAnimation);
+    }
 
     const pauseTimerAnimation = () => {
         startTimerAnimationTime.current = null;
         finishTimerAnimationTime.current = null;
-        cancelAnimationFrame(timerAnimationFrameRef.current!);
+        if (timerAnimationFrameRef.current !== null) {
+            cancelAnimationFrame(timerAnimationFrameRef.current);
+        }
     };
 
     const finishTimerAnimation = () => {
-        setStrokeDashoffset(0);
-        setStrokeColor(CircleColors.COMPLETED);
+        if (timerAnimationFrameRef.current !== null) {
+            cancelAnimationFrame(timerAnimationFrameRef.current);
+        }
         intervalRef.current = setInterval(() => {
             setStrokeColor((prevColor) => prevColor === CircleColors.ACTIVE ? CircleColors.COMPLETED : CircleColors.ACTIVE);
         }, MILLISECOND);
@@ -95,19 +109,15 @@ export const useTimer = () => {
 
     const resetTimerAnimation = () => {
         pauseTimerAnimation();
-        mutableEndTime.current = endTime;
-        mutableElapsedTime.current = elapsedTime;
+        mutableEndTime.current = duration;
+        mutableElapsedTime.current = 0;
         setStrokeDashoffset(STROKE_DASHARRAY);
-        if (intervalRef.current) {
-            setStrokeColor(CircleColors.ACTIVE);
-            clearInterval(intervalRef.current);
-        }
     };
 
     return {
         strokeDashoffset,
         strokeColor,
         endTime: convertToSeconds(mutableEndTime.current),
-        elapsedTime: convertToSeconds(mutableElapsedTime.current ?? 0),
+        elapsedTime: convertToSeconds(mutableElapsedTime.current),
     };
 };

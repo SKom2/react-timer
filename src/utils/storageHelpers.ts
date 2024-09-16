@@ -1,31 +1,31 @@
-import {TimerStorage} from "../types/TimerTypes.ts";
-import {CircleColors, STROKE_DASHARRAY} from "./constants.ts";
+import {StoredTimerState} from "../types/TimerTypes.ts";
 import {MutableRefObject} from "react";
 
-export const getFromLocalStorage = (): TimerStorage => {
-    const defaultTimerState = {
-        elapsedTime: null,
-        endTime: null,
-        isTimerStarted: false,
-        isTimerPaused: false,
-        isTimerFinished: false,
-        strokeDashoffset: STROKE_DASHARRAY,
-        strokeColor: CircleColors.ACTIVE,
-        timerAnimationFrameRef: null,
-        intervalRef: null,
-    };
+export const defaultTimerState: StoredTimerState = {
+    elapsedTime: 0,
+    endTime: 0,
+    strokeDashoffset: 0,
 
-    const storedValue = localStorage.getItem("timerStorage");
-    return storedValue ? JSON.parse(storedValue) : defaultTimerState;
+    isTimerStarted: false,
+    isTimerPaused: false,
 };
 
-export const setToLocalStorage = <T>(state: MutableRefObject<TimerStorage>, key: keyof TimerStorage, value: T): TimerStorage => {
-    const newState = {
+export const getTimerStateFromLocalStorage = (): StoredTimerState => {
+    const valueFromStorage = localStorage.getItem("timerStorage")
+
+    if (valueFromStorage) {
+        return JSON.parse(valueFromStorage);
+    } else {
+        localStorage.setItem("timerStorage", JSON.stringify(defaultTimerState))
+        return defaultTimerState
+    }
+};
+
+export const setToLocalStorage = <T>(state: MutableRefObject<StoredTimerState>, key: keyof StoredTimerState, value: T): void => {
+    state.current = {
         ...state.current,
         [key]: value,
     };
 
-    localStorage.setItem("timerStorage", JSON.stringify(newState));
-
-    return newState
+    localStorage.setItem("timerStorage", JSON.stringify(state.current));
 };

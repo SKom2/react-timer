@@ -1,5 +1,4 @@
-import React, {MutableRefObject, ReactNode} from "react";
-import {CircleColors} from "../utils/constants.ts";
+import {Dispatch, MutableRefObject, ReactNode, SetStateAction} from "react";
 
 export interface TimerProps {
     title: string;
@@ -12,27 +11,29 @@ export interface TimerContextProviderProps extends TimerProps {
 }
 
 export interface TimerContextProps extends TimerProps {
-    cachedTimerState: MutableRefObject<TimerStorage> | null,
+    elapsedTime: number;
+    duration: number;
 
     isTimerStarted: boolean,
-    setIsTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
-    isTimerFinished: boolean,
-    setIsTimerFinished: React.Dispatch<React.SetStateAction<boolean>>;
     isTimerPaused: boolean,
+    isTimerFinished: boolean,
+    isTimerReset: boolean,
+    setIsTimerStarted: Dispatch<SetStateAction<boolean>>;
+    setIsTimerFinished: Dispatch<SetStateAction<boolean>>;
+
+    cachedTimerStateRef: MutableRefObject<StoredTimerState> | null,
+    cachedTimerState: StoredTimerState,
 
     onStart: () => void;
     onPause: () => void;
     onReset: () => void;
 }
 
-export interface TimerStorage {
-    endTime: number | null;
-    elapsedTime: number | null;
+export interface StoredTimerState {
+    endTime: number;
+    elapsedTime: number;
+    strokeDashoffset: number,
+
     isTimerStarted: boolean,
     isTimerPaused: boolean,
-    isTimerFinished: boolean,
-    strokeDashoffset: number,
-    strokeColor: CircleColors,
-    timerAnimationFrameRef: number | null,
-    intervalRef: number | null
 }

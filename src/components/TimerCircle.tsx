@@ -13,7 +13,7 @@ const TimerCircle: FC<{ strokeDashoffset: number, strokeColor: string }> = ({ st
             <circle cx={CIRCLE_LOCATION_X} cy={CIRCLE_LOCATION_Y} r={CIRCLE_RADIUS}
                     className="w-full h-full fill-transparent stroke-[6px] stroke-circle-bg"></circle>
             <circle cx={CIRCLE_LOCATION_X} cy={CIRCLE_LOCATION_Y} r={CIRCLE_RADIUS}
-                    className={`w-full h-full fill-transparent stroke-[6px] ${strokeColor == CircleColors.ACTIVE ? `stroke-circle-bg-${CircleColors.ACTIVE}` : `stroke-circle-bg-${CircleColors.COMPLETED}`}`}
+                    className={`w-full h-full fill-transparent stroke-[6px] ${strokeColor == CircleColors.ACTIVE ? `stroke-circle-bg-active` : `stroke-circle-bg-completed`}`}
                     style={{strokeDasharray: STROKE_DASHARRAY, strokeDashoffset: strokeDashoffset}}></circle>
         </svg>
     );
