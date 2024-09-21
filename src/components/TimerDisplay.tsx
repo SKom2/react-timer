@@ -7,7 +7,7 @@ const TimerDisplay = () => {
 
     return (
         <div className="relative h-[170px] w-[170px] flex justify-center items-center">
-            <TimerCircle strokeDashoffset={strokeDashoffset} strokeColor={strokeColor} />
+            <TimerCircle strokeDashoffset={strokeDashoffset} strokeState={strokeColor} />
             <TimerClock endTime={endTime} elapsedTime={elapsedTime} />
         </div>
     );

@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import {useTimerContext} from "../context/TimerContext.tsx";
-import {CircleColors, MILLISECOND, STROKE_DASHARRAY} from "../utils/constants.ts";
+import {CircleState, MILLISECOND, STROKE_DASHARRAY} from "../utils/constants.ts";
 import {convertToSeconds} from "../utils/formatTime.ts";
 import {setToLocalStorage} from "../utils/storageHelpers.ts";
 
@@ -8,7 +8,6 @@ export const useTimer = () => {
     const {
         elapsedTime,
         endTime,
-        duration,
 
         isTimerStarted,
         isTimerPaused,
@@ -20,16 +19,16 @@ export const useTimer = () => {
         cachedTimerStateRef,
         cachedTimerState,
     } = useTimerContext();
-
+    const duration = endTime + elapsedTime;
     const [strokeDashoffset, setStrokeDashoffset] = useState<number>(
         isTimerStarted
             ? cachedTimerState.strokeDashoffset
             : STROKE_DASHARRAY * (1 - elapsedTime / duration)
     );
-    const [strokeColor, setStrokeColor] = useState<string>(CircleColors.ACTIVE);
+    const [strokeColor, setStrokeColor] = useState<string>(CircleState.ACTIVE);
 
     const timerAnimationFrameRef = useRef<number | null>(null);
-    const intervalRef = useRef<number | null>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const startTimerAnimationTime = useRef<number | null>(null);
     const finishTimerAnimationTime = useRef<number | null>(null);
@@ -101,9 +100,10 @@ export const useTimer = () => {
     const finishTimerAnimation = () => {
         if (timerAnimationFrameRef.current !== null) {
             cancelAnimationFrame(timerAnimationFrameRef.current);
+            setStrokeDashoffset(0)
         }
         intervalRef.current = setInterval(() => {
-            setStrokeColor((prevColor) => prevColor === CircleColors.ACTIVE ? CircleColors.COMPLETED : CircleColors.ACTIVE);
+            setStrokeColor((prevColor) => prevColor === CircleState.ACTIVE ? CircleState.COMPLETED : CircleState.ACTIVE);
         }, MILLISECOND);
     };
 

@@ -9,9 +9,9 @@ const TimerClock: FC<{
 }> = ({
     endTime,
     elapsedTime,
-                        }) => {
+}) => {
     return (
-        <div className="absolute">
+        <div className="absolute flex flex-col justify-center items-center">
             <TimerTitle />
             <TimerElapsedTime elapsedTime={elapsedTime} />
             <TimerEndTime endTime={endTime} />

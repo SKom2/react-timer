@@ -6,9 +6,9 @@ const TimerControls = () => {
 
     return (
         <div className="flex justify-center gap-3">
-            <TimerButton onAction={onStart} title="Start" disabled={isTimerStarted && !isTimerPaused || isTimerFinished} />
-            <TimerButton onAction={onPause} title="Pause" disabled={isTimerFinished || isTimerPaused && isTimerStarted} />
-            <TimerButton onAction={onReset} title="Reset"  />
+            <TimerButton onClick={onStart} title="Start" disabled={isTimerStarted && !isTimerPaused || isTimerFinished} />
+            <TimerButton onClick={onPause} title="Pause" disabled={isTimerFinished || isTimerPaused && isTimerStarted} />
+            <TimerButton onClick={onReset} title="Reset"  />
         </div>
     );
 };

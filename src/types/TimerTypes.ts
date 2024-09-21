@@ -12,7 +12,6 @@ export interface TimerContextProviderProps extends TimerProps {
 
 export interface TimerContextProps extends TimerProps {
     elapsedTime: number;
-    duration: number;
 
     isTimerStarted: boolean,
     isTimerPaused: boolean,

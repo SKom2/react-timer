@@ -1,33 +1,14 @@
 import {createContext, FC, useContext, useEffect, useRef, useState} from "react";
 import {TimerContextProps, TimerContextProviderProps} from "../types/TimerTypes.ts";
-import {convertToMilliseconds} from "../utils/formatTime.ts";
-import {defaultTimerState, getTimerStateFromLocalStorage, setToLocalStorage} from "../utils/storageHelpers.ts";
+import {convertToMilliseconds, MAX_TIME} from "../utils/formatTime.ts";
+import {getTimerStateFromLocalStorage, setToLocalStorage} from "../utils/storageHelpers.ts";
 
-const TimerContext = createContext<TimerContextProps>({
-    title: '',
-    endTime: 0,
-    elapsedTime: 0,
-    duration: 0,
-
-    isTimerStarted: false,
-    isTimerPaused: false,
-    isTimerFinished: false,
-    isTimerReset: false,
-    setIsTimerStarted: () => {},
-    setIsTimerFinished: () => {},
-
-    cachedTimerStateRef: null,
-    cachedTimerState: defaultTimerState,
-
-    onStart: () => {},
-    onPause: () => {},
-    onReset: () => {},
-});
+export const TimerContext = createContext<TimerContextProps | null>(null);
 
 export const TimerContextProvider: FC<TimerContextProviderProps> = ({ title, endTime, elapsedTime, children }) => {
+    if (elapsedTime ? (elapsedTime + endTime) > MAX_TIME : endTime > MAX_TIME) throw new Error('Maximum allowed time exceeded');
     const initialEndTime = convertToMilliseconds(endTime);
     const initialElapsedTime = convertToMilliseconds(elapsedTime ? elapsedTime : 0);
-    const duration = initialElapsedTime + initialEndTime;
 
     const cachedTimerStateRef = useRef(getTimerStateFromLocalStorage());
 
@@ -63,9 +44,8 @@ export const TimerContextProvider: FC<TimerContextProviderProps> = ({ title, end
         title,
         endTime: initialEndTime,
         elapsedTime: initialElapsedTime,
-        duration,
 
-        cachedTimerStateRef: cachedTimerStateRef,
+        cachedTimerStateRef,
         cachedTimerState: cachedTimerStateRef.current,
 
         isTimerStarted,
