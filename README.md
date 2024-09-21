@@ -19,10 +19,10 @@ This project showcases a React-based timer component designed for functionality 
 
 ### Technologies Used
 
-- **React**: JavaScript library for building user interfaces.
-- **Vite**: Next-generation front-end tooling.
-- **TypeScript**: A superset of JavaScript that adds static types.
-- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+- **React**
+- **Vite**
+- **TypeScript**
+- **Tailwind CSS**
 
 ### Getting Started
 
