@@ -1,7 +1,7 @@
 import Timer from "./components/Timer.tsx";
 
 function App() {
-  return <Timer title="Title from props" endTime={0} elapsedTime={1}/>
+  return <Timer title="Title from props" endTime={10} elapsedTime={10}/>
 }
 
 export default App
