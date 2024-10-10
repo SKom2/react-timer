@@ -3,6 +3,7 @@ import {useTimerContext} from "../context/TimerContext.tsx";
 import {CircleState, MILLISECOND, STROKE_DASHARRAY} from "../utils/constants.ts";
 import {convertToSeconds} from "../utils/formatTime.ts";
 import {setToLocalStorage} from "../utils/storageHelpers.ts";
+import alarmSound from "../assets/sounds/gorgeous.mp3"
 
 export const useTimer = () => {
     const {
@@ -32,6 +33,8 @@ export const useTimer = () => {
 
     const startTimerAnimationTime = useRef<number | null>(null);
     const finishTimerAnimationTime = useRef<number | null>(null);
+
+    const alarm = useRef(new Audio(alarmSound))
 
     const mutableElapsedTime = useRef<number>(isTimerStarted ? cachedTimerState.elapsedTime : elapsedTime);
     const mutableEndTime = useRef<number>(isTimerStarted ? cachedTimerState.endTime : endTime);
@@ -102,6 +105,7 @@ export const useTimer = () => {
             cancelAnimationFrame(timerAnimationFrameRef.current);
             setStrokeDashoffset(0)
         }
+        alarm.current.play();
         intervalRef.current = setInterval(() => {
             setStrokeColor((prevColor) => prevColor === CircleState.ACTIVE ? CircleState.COMPLETED : CircleState.ACTIVE);
         }, MILLISECOND);
@@ -109,6 +113,8 @@ export const useTimer = () => {
 
     const resetTimerAnimation = () => {
         pauseTimerAnimation();
+        alarm.current.pause()
+        alarm.current.currentTime = 0;
         mutableEndTime.current = duration;
         mutableElapsedTime.current = 0;
         setStrokeDashoffset(STROKE_DASHARRAY);
