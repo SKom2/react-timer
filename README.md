@@ -8,7 +8,7 @@
 
 ### Overview
 
-Welcome to the **React Timer Component**, where functionality meets flair—kind of like a Taylor Swift concert! 🎤✨ So, before you hit that start button, let’s keep the volume down—Taylor can get a little loud!
+Welcome to the [**React Timer Component**](https://main--funny-granita-c8ec01.netlify.app/), where functionality meets flair—kind of like a Taylor Swift concert! 🎤✨ So, before you hit that start button, let’s keep the volume down—Taylor can get a little loud!
 
 ### Functionality
 
